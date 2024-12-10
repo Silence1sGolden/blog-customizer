@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode, CSSProperties, useState, useEffect, useRef } from 'react';
+import { StrictMode, CSSProperties, useState, useRef } from 'react';
 import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
@@ -16,9 +16,9 @@ const App = () => {
 	const [open, setOpen] = useState(false);
 	const [formState, setFormState] = useState(defaultArticleState);
 	const [mainState, setMainState] = useState(defaultArticleState);
-	const asideForm = useRef<HTMLElement>(null);
+	const mainContainer = useRef<HTMLElement>(null);
 
-	function onConfirm(evt: any) {
+	function onConfirm(evt: React.MouseEvent) {
 		evt.preventDefault();
 		setMainState(formState);
 	}
@@ -28,16 +28,10 @@ const App = () => {
 		setMainState(defaultArticleState);
 	}
 
-	function onOutsideClick(evt: any) {
-		if (open && !asideForm.current?.contains(evt.target as Node)) {
-			setOpen(false);
-		}
-	}
-
 	return (
 		<main
+			ref={mainContainer}
 			className={clsx(styles.main)}
-			onClick={onOutsideClick}
 			style={
 				{ 
 					'--font-family': mainState.fontFamilyOption.value,
@@ -47,7 +41,7 @@ const App = () => {
 					'--bg-color': mainState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm asideForm={asideForm} open={open} setOpen={setOpen} state={formState} setFormState={setFormState} onConfirm={onConfirm} onReset={onReset}/>
+			<ArticleParamsForm content={mainContainer} open={open} setOpen={setOpen} state={formState} setFormState={setFormState} onConfirm={onConfirm} onReset={onReset}/>
 			<Article/>
 		</main>
 	);

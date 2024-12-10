@@ -8,18 +8,32 @@ import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 import clsx from 'clsx';
 import { Text } from 'src/ui/text';
+import { useEffect, useRef } from 'react';
 
 type ArticleParamsFormProps = {
-	asideForm: React.RefObject<HTMLElement>,
+	content: React.RefObject<HTMLElement>,
 	open: boolean,
 	state: ArticleStateType,
 	setOpen: (data: boolean) => void,
 	setFormState: (data: ArticleStateType) => void,
-	onConfirm: (evt: any) => void,
-	onReset: (evt: any) => void,
+	onConfirm: (evt: React.MouseEvent) => void,
+	onReset: (evt: React.MouseEvent) => void,
 }
 
-export const ArticleParamsForm = ({ asideForm, open, state, setOpen, setFormState, onConfirm, onReset }: ArticleParamsFormProps) => {
+export const ArticleParamsForm = ({ content, open, state, setOpen, setFormState, onConfirm, onReset }: ArticleParamsFormProps) => {
+	const container = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		document.addEventListener('click', onOutsideClick);
+	}, []);
+
+	function onOutsideClick(evt: MouseEvent) {
+		const target = evt.target as HTMLElement;
+
+		if (!container.current?.contains(target) && content.current?.contains(target)) {
+			setOpen(false);
+		}
+	}
 
 	function setFontFamily(data: OptionType) {
 		setFormState({
@@ -57,11 +71,11 @@ export const ArticleParamsForm = ({ asideForm, open, state, setOpen, setFormStat
 	}
 
 	return (
-		<>
+		<div ref={container}>
 			<ArrowButton isOpen={open} onClick={() => { open ? setOpen(false) : setOpen(true) }} />
-			<aside ref={asideForm} className={clsx(styles.container, { [styles.container_open]: open })}>
+			<aside className={clsx(styles.container, { [styles.container_open]: open })}>
 				<form className={styles.form}>
-					<Text size={31} weight={800} uppercase={true}>Задайте Параметры</Text>
+					<Text as={"h2"} size={31} weight={800} uppercase={true}>Задайте Параметры</Text>
 					<Select title='Шрифт' selected={state.fontFamilyOption} options={fontFamilyOptions} onChange={setFontFamily}/>
 					<RadioGroup title='Размер Шрифта' name='size' selected={state.fontSizeOption} options={fontSizeOptions} onChange={setFontSize}/>
 					<Select title='Цвет Шрифта' selected={state.fontColor} options={fontColors} onChange={setColor}/>
@@ -74,6 +88,6 @@ export const ArticleParamsForm = ({ asideForm, open, state, setOpen, setFormStat
 					</div>
 				</form>
 			</aside>
-		</>
+		</div>
 	);
 };
