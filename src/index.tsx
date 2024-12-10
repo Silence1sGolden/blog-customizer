@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode, CSSProperties, useState } from 'react';
+import { StrictMode, CSSProperties, useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
@@ -14,23 +14,32 @@ const root = createRoot(domNode);
 
 const App = () => {
 	const [open, setOpen] = useState(false);
-	const [state, setSettings] = useState(defaultArticleState);
+	const [formState, setFormState] = useState(defaultArticleState);
 	const [mainState, setMainState] = useState(defaultArticleState);
+	const asideForm = useRef<HTMLElement>(null);
 
 	function onConfirm(evt: any) {
 		evt.preventDefault();
-		setMainState(state);
+		setMainState(formState);
 	}
 
 	function onReset() {
-		setSettings(defaultArticleState);
+		setFormState(defaultArticleState);
+		setMainState(defaultArticleState);
+	}
+
+	function onOutsideClick(evt: any) {
+		if (open && !asideForm.current?.contains(evt.target as Node)) {
+			setOpen(false);
+		}
 	}
 
 	return (
 		<main
 			className={clsx(styles.main)}
+			onClick={onOutsideClick}
 			style={
-				{
+				{ 
 					'--font-family': mainState.fontFamilyOption.value,
 					'--font-size': mainState.fontSizeOption.value,
 					'--font-color': mainState.fontColor.value,
@@ -38,8 +47,8 @@ const App = () => {
 					'--bg-color': mainState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm open={open} setOpen={setOpen} state={state} setSettings={setSettings} onConfirm={onConfirm} onReset={onReset}/>
-			<Article />
+			<ArticleParamsForm asideForm={asideForm} open={open} setOpen={setOpen} state={formState} setFormState={setFormState} onConfirm={onConfirm} onReset={onReset}/>
+			<Article/>
 		</main>
 	);
 };

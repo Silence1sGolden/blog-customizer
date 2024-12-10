@@ -9,47 +9,48 @@ import { Separator } from 'src/ui/separator';
 import clsx from 'clsx';
 import { Text } from 'src/ui/text';
 
-type ArticleFormProps = {
+type ArticleParamsFormProps = {
+	asideForm: React.RefObject<HTMLElement>,
 	open: boolean,
 	state: ArticleStateType,
 	setOpen: (data: boolean) => void,
-	setSettings: (data: ArticleStateType) => void,
+	setFormState: (data: ArticleStateType) => void,
 	onConfirm: (evt: any) => void,
 	onReset: (evt: any) => void,
 }
 
-export const ArticleParamsForm = ({ open, state, setOpen, setSettings, onConfirm, onReset }: ArticleFormProps) => {
+export const ArticleParamsForm = ({ asideForm, open, state, setOpen, setFormState, onConfirm, onReset }: ArticleParamsFormProps) => {
 
 	function setFontFamily(data: OptionType) {
-		setSettings({
+		setFormState({
 			...state,
 			fontFamilyOption: data
 		});
 	}
 
 	function setFontSize(data: OptionType) {
-		setSettings({
+		setFormState({
 			...state,
 			fontSizeOption: data
 		});
 	}
 
 	function setColor(data: OptionType) {
-		setSettings({
+		setFormState({
 			...state,
 			fontColor: data
 		});
 	}
 
 	function setBackgroundColor(data: OptionType) {
-		setSettings({
+		setFormState({
 			...state,
 			backgroundColor: data
 		})
 	}
 
 	function setContentWidth(data: OptionType) {
-		setSettings({
+		setFormState({
 			...state,
 			contentWidth: data
 		})
@@ -58,7 +59,7 @@ export const ArticleParamsForm = ({ open, state, setOpen, setSettings, onConfirm
 	return (
 		<>
 			<ArrowButton isOpen={open} onClick={() => { open ? setOpen(false) : setOpen(true) }} />
-			<aside className={clsx(styles.container, { [styles.container_open]: open })}>
+			<aside ref={asideForm} className={clsx(styles.container, { [styles.container_open]: open })}>
 				<form className={styles.form}>
 					<Text size={31} weight={800} uppercase={true}>Задайте Параметры</Text>
 					<Select title='Шрифт' selected={state.fontFamilyOption} options={fontFamilyOptions} onChange={setFontFamily}/>
