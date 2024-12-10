@@ -16,7 +16,6 @@ const App = () => {
 	const [open, setOpen] = useState(false);
 	const [formState, setFormState] = useState(defaultArticleState);
 	const [mainState, setMainState] = useState(defaultArticleState);
-	const mainContainer = useRef<HTMLElement>(null);
 
 	function onConfirm(evt: React.MouseEvent) {
 		evt.preventDefault();
@@ -30,7 +29,6 @@ const App = () => {
 
 	return (
 		<main
-			ref={mainContainer}
 			className={clsx(styles.main)}
 			style={
 				{ 
@@ -41,7 +39,7 @@ const App = () => {
 					'--bg-color': mainState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm content={mainContainer} open={open} setOpen={setOpen} state={formState} setFormState={setFormState} onConfirm={onConfirm} onReset={onReset}/>
+			<ArticleParamsForm open={open} setOpen={setOpen} state={formState} setFormState={setFormState} onConfirm={onConfirm} onReset={onReset}/>
 			<Article/>
 		</main>
 	);

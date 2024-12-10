@@ -11,7 +11,6 @@ import { Text } from 'src/ui/text';
 import { useEffect, useRef } from 'react';
 
 type ArticleParamsFormProps = {
-	content: React.RefObject<HTMLElement>,
 	open: boolean,
 	state: ArticleStateType,
 	setOpen: (data: boolean) => void,
@@ -20,7 +19,7 @@ type ArticleParamsFormProps = {
 	onReset: (evt: React.MouseEvent) => void,
 }
 
-export const ArticleParamsForm = ({ content, open, state, setOpen, setFormState, onConfirm, onReset }: ArticleParamsFormProps) => {
+export const ArticleParamsForm = ({ open, state, setOpen, setFormState, onConfirm, onReset }: ArticleParamsFormProps) => {
 	const container = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -30,7 +29,7 @@ export const ArticleParamsForm = ({ content, open, state, setOpen, setFormState,
 	function onOutsideClick(evt: MouseEvent) {
 		const target = evt.target as HTMLElement;
 
-		if (!container.current?.contains(target) && content.current?.contains(target)) {
+		if (!container.current?.contains(target) && document.contains(target)) {
 			setOpen(false);
 		}
 	}
