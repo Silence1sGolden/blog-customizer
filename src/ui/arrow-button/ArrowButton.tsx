@@ -7,14 +7,16 @@ import clsx from 'clsx';
 export type OnClick = () => void;
 
 type ArrowButtonProps = {
+	reff?: React.RefObject<HTMLDivElement>;
 	isOpen: boolean;
 	onClick: OnClick;
 };
 
-export const ArrowButton = ({ isOpen, onClick }: ArrowButtonProps) => {
+export const ArrowButton = ({ reff, isOpen, onClick }: ArrowButtonProps) => {
 	return (
 		/* Не забываем указаывать role и aria-label атрибуты для интерактивных элементов */
 		<div
+			ref={reff}
 			role='button'
 			aria-label='Открыть/Закрыть форму параметров статьи'
 			tabIndex={0}
