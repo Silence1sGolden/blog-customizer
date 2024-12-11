@@ -13,19 +13,8 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [open, setOpen] = useState(false);
-	const [formState, setFormState] = useState(defaultArticleState);
+	
 	const [mainState, setMainState] = useState(defaultArticleState);
-
-	function onConfirm(evt: React.MouseEvent) {
-		evt.preventDefault();
-		setMainState(formState);
-	}
-
-	function onReset() {
-		setFormState(defaultArticleState);
-		setMainState(defaultArticleState);
-	}
 
 	return (
 		<main
@@ -39,7 +28,7 @@ const App = () => {
 					'--bg-color': mainState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm open={open} setOpen={setOpen} state={formState} setFormState={setFormState} onConfirm={onConfirm} onReset={onReset}/>
+			<ArticleParamsForm setMainState={setMainState} />
 			<Article/>
 		</main>
 	);

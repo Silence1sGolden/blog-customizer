@@ -3,28 +3,35 @@ import { Button } from 'src/ui/button';
 
 import styles from './ArticleParamsForm.module.scss';
 import { Select } from 'src/ui/select';
-import { ArticleStateType, backgroundColors, contentWidthArr, fontColors, fontFamilyOptions, fontSizeOptions, OptionType } from 'src/constants/articleProps';
+import { ArticleStateType, backgroundColors, contentWidthArr, defaultArticleState, fontColors, fontFamilyOptions, fontSizeOptions, OptionType } from 'src/constants/articleProps';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 import clsx from 'clsx';
 import { Text } from 'src/ui/text';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type ArticleParamsFormProps = {
-	open: boolean,
-	state: ArticleStateType,
-	setOpen: (data: boolean) => void,
-	setFormState: (data: ArticleStateType) => void,
-	onConfirm: (evt: React.MouseEvent) => void,
-	onReset: (evt: React.MouseEvent) => void,
+	setMainState: (data: ArticleStateType) => void,
 }
 
-export const ArticleParamsForm = ({ open, state, setOpen, setFormState, onConfirm, onReset }: ArticleParamsFormProps) => {
+export const ArticleParamsForm = ({ setMainState }: ArticleParamsFormProps) => {
+	const [open, setOpen] = useState(false);
+	const [formState, setFormState] = useState(defaultArticleState);
 	const container = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		document.addEventListener('click', onOutsideClick);
 	}, []);
+
+	function onConfirm(evt: React.MouseEvent) {
+		evt.preventDefault();
+		setMainState(formState);
+	}
+
+	function onReset() {
+		setFormState(defaultArticleState);
+		setMainState(defaultArticleState);
+	}
 
 	function onOutsideClick(evt: MouseEvent) {
 		const target = evt.target as HTMLElement;
@@ -36,35 +43,35 @@ export const ArticleParamsForm = ({ open, state, setOpen, setFormState, onConfir
 
 	function setFontFamily(data: OptionType) {
 		setFormState({
-			...state,
+			...formState,
 			fontFamilyOption: data
 		});
 	}
 
 	function setFontSize(data: OptionType) {
 		setFormState({
-			...state,
+			...formState,
 			fontSizeOption: data
 		});
 	}
 
 	function setColor(data: OptionType) {
 		setFormState({
-			...state,
+			...formState,
 			fontColor: data
 		});
 	}
 
 	function setBackgroundColor(data: OptionType) {
 		setFormState({
-			...state,
+			...formState,
 			backgroundColor: data
 		})
 	}
 
 	function setContentWidth(data: OptionType) {
 		setFormState({
-			...state,
+			...formState,
 			contentWidth: data
 		})
 	}
@@ -75,12 +82,12 @@ export const ArticleParamsForm = ({ open, state, setOpen, setFormState, onConfir
 			<aside className={clsx(styles.container, { [styles.container_open]: open })}>
 				<form className={styles.form}>
 					<Text as={"h2"} size={31} weight={800} uppercase={true}>Задайте Параметры</Text>
-					<Select title='Шрифт' selected={state.fontFamilyOption} options={fontFamilyOptions} onChange={setFontFamily}/>
-					<RadioGroup title='Размер Шрифта' name='size' selected={state.fontSizeOption} options={fontSizeOptions} onChange={setFontSize}/>
-					<Select title='Цвет Шрифта' selected={state.fontColor} options={fontColors} onChange={setColor}/>
+					<Select title='Шрифт' selected={formState.fontFamilyOption} options={fontFamilyOptions} onChange={setFontFamily}/>
+					<RadioGroup title='Размер Шрифта' name='size' selected={formState.fontSizeOption} options={fontSizeOptions} onChange={setFontSize}/>
+					<Select title='Цвет Шрифта' selected={formState.fontColor} options={fontColors} onChange={setColor}/>
 					<Separator />
-					<Select title='Цвет Фона' selected={state.backgroundColor} options={backgroundColors} onChange={setBackgroundColor} />
-					<Select title='Ширина Контента' selected={state.contentWidth} options={contentWidthArr} onChange={setContentWidth}/>
+					<Select title='Цвет Фона' selected={formState.backgroundColor} options={backgroundColors} onChange={setBackgroundColor} />
+					<Select title='Ширина Контента' selected={formState.contentWidth} options={contentWidthArr} onChange={setContentWidth}/>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' onClick={onReset}/>
 						<Button title='Применить' htmlType='submit' type='apply' onClick={onConfirm}/>
